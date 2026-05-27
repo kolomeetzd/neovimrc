@@ -1,5 +1,5 @@
 -- =====================================================
--- SECTION 1: Core Neovim settings, leaders, options.
+-- SECTION 1: Core Neovim settings, leaders, options
 -- =====================================================
 do
     -- Enable faster startup by caching compiled Lua modules
@@ -13,6 +13,14 @@ do
 
     -- I use the "FiraCode Nerd Font" in the terminal.
     vim.g.have_nerd_font = true
+
+    -- Netrw settigns
+    -- Do not show netrw banner.
+    vim.g.netrw_banner = 0
+    -- Use tree style listing.
+    vim.g.netrw_liststyle = 3
+    -- Reduce initial size of a new windows.
+    vim.g.netrw_winsize = 25
 
     -- Options
     --
@@ -125,6 +133,8 @@ do
     -- Keymaps
     --
     -- See `:h vim.keymap.set()`, `:h mapping`, `:h keycodes`
+    -- Open Netrw (defaults to: re-using the same window).
+    vim.keymap.set('n', '<Leader>pv', vim.cmd.Ex)
 
     -- Use <Esc> to exit terminal mode
     vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
