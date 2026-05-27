@@ -133,8 +133,26 @@ do
     -- Keymaps
     --
     -- See `:h vim.keymap.set()`, `:h mapping`, `:h keycodes`
+
     -- Open Netrw (defaults to: re-using the same window).
     vim.keymap.set('n', '<Leader>pv', vim.cmd.Ex)
+
+    -- Align the cursor line to the middle of the window
+    -- while scrolling using Ctlr-d/Ctlr-u.
+    vim.keymap.set('n', '<C-d>', '<C-d>zz')
+    vim.keymap.set('n', '<C-u>', '<C-u>zz')
+    -- Center the cursor line and open just enough folds
+    -- while repeating the latest search ("/" or "?").
+    vim.keymap.set('n', 'n', 'nzzzv')
+    vim.keymap.set('n', 'N', 'Nzzzv')
+
+    -- Center the line and leave the cursor in the same column
+    -- while jumping between errors in the quickfix list (global to the entire session).
+    vim.keymap.set('n', '<C-k>', ':cnext<CR>zz')
+    vim.keymap.set('n', '<C-j>', ':cprev<CR>zz')
+    -- Same as above, but for the location list (better for window-specific tasks).
+    vim.keymap.set('n', '<Leader>k', ':lnext<CR>zz')
+    vim.keymap.set('n', '<Leader>j', ':lprev<CR>zz')
 
     -- Use <Esc> to exit terminal mode
     vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
