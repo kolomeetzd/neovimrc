@@ -3,6 +3,7 @@
 -- NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
 vim.g.mapleader = ' '
 
+
 -- OPTIONS
 --
 -- See `:h vim.o`
@@ -11,32 +12,85 @@ vim.g.mapleader = ' '
 -- To see documentation for an option, you can use `:h 'optionname'`, for example `:h 'number'`
 -- (Note the single quotes)
 
-vim.o.number = true -- Show line numbers in a column.
-
+-- Show line numbers in a column.
+vim.o.number = true
 -- Show line numbers relative to where the cursor is.
 -- Affects the 'number' option above, see `:h number_relativenumber`.
 vim.o.relativenumber = true
+-- Always show the sign column, otherwise it would shift the text each time.
+vim.o.signcolumn = 'yes'
+-- Highlight the line where the cursor is on.
+vim.o.cursorline = true
+-- Keep this many screen lines above/below the cursor.
+vim.o.scrolloff = 10
+-- When off lines will not wrap and only part of long lines will be displayed.
+vim.o.wrap = false
 
--- Sync clipboard between OS and Neovim. Schedule the setting after `UIEnter` because it can
--- increase startup-time. Remove this option if you want your OS clipboard to remain independent.
--- See `:h 'clipboard'`
-vim.api.nvim_create_autocmd('UIEnter', {
-  callback = function()
-    vim.o.clipboard = 'unnamedplus'
-  end,
-})
+-- For more info, see the "Tabs and spaces" section — `:h 30.5`.
+-- Indent a new line by 4 spaces istead of `tabstop` value.
+vim.o.shiftwidth = 4
+-- Maintain global coherence with `shiftwidth` option.
+vim.o.softtabstop = -1
+-- Replace any inserted horizontal tab character with an equivalent number of spaces.
+-- Use the `:retab` command to purge a file from all its horizontal tab characters.
+vim.o.expandtab = true
+-- Copy the indent level of the previos line.
+vim.o.autoindent = true
+-- Show <tab> and trailing spaces.
+vim.o.list = true
 
--- Case-insensitive searching UNLESS \C or one or more capital letters in the search term
+-- Case-insensitive searching;
 vim.o.ignorecase = true
+-- UNLESS \C or one or more capital letters in the search term.
 vim.o.smartcase = true
+-- Do not highlight matches on a previos search pattern.
+vim.o.hlsearch = false
 
-vim.o.cursorline = true -- Highlight the line where the cursor is on.
-vim.o.scrolloff = 10 -- Keep this many screen lines above/below the cursor.
-vim.o.list = true -- Show <tab> and trailing spaces.
+-- Show this many items in the popup menu.
+vim.o.pumheight = 5
+
+-- Hide the name of the current mode at the cmdline.
+vim.o.showmode = false
+
+-- Do not show the line with tab page labels.
+-- NOTE: I want default behavior, so I'm keeping it commented for now.
+-- vim.o.showtabline = 0
 
 -- If performing an operation that would fail due to unsaved changes in the buffer (like `:q`),
 -- instead raise a dialog asking if you wish to save the current file(s). See `:h 'confirm'`
 vim.o.confirm = true
+-- Do not use a swapfile fot the buffer.
+vim.o.swapfile = false
+
+-- Enable project-local configuration.
+-- Nvim will execute any .nvimrc or .exrc file found in the cwd, if the file in the trust list.
+-- For more info, see `:h trust`.
+vim.o.exrc = true
+
+-- The minimum number of characters to keep to the left/right if `nowrap` is set.
+vim.o.sidescrolloff = 8
+-- Characters to show in the first/last visible column, when `wrap` is off.
+vim.o.listchars = 'extends:>,precedes:<'
+
+-- Enable spell checker
+vim.o.spell = true
+-- and specify to check for this languages.
+vim.o.spelllang = 'en,ru'
+
+-- Force all horizontal splits to open below the current window.
+vim.o.splitbelow = true
+-- Force all vertical splits to open to the right of the current window.
+vim.o.splitright = true
+
+-- Enable 24-bit RGB color in the host terminal.
+vim.o.termguicolors = true
+
+-- Time in milliseconds to wait for a key code sequence to complete.
+vim.o.ttimeoutlen = 100
+
+-- Save undo history when writing a buffer to a file.
+vim.o.undofile = true
+
 
 -- KEYMAPS
 --
@@ -55,6 +109,7 @@ vim.keymap.set({ 'n' }, '<A-j>', '<C-w>j')
 vim.keymap.set({ 'n' }, '<A-k>', '<C-w>k')
 vim.keymap.set({ 'n' }, '<A-l>', '<C-w>l')
 
+
 -- AUTOCOMMANDS (EVENT HANDLERS)
 --
 -- See `:h lua-guide-autocommands`, `:h autocmd`, `:h nvim_create_autocmd()`
@@ -68,6 +123,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+
 -- USER COMMANDS: DEFINE CUSTOM COMMANDS
 --
 -- See `:h nvim_create_user_command()` and `:h user-commands`
@@ -78,6 +134,7 @@ vim.api.nvim_create_user_command('GitBlameLine', function()
   local filename = vim.api.nvim_buf_get_name(0)
   print(vim.system({ 'git', 'blame', '-L', line_number .. ',+1', filename }):wait().stdout)
 end, { desc = 'Print the git blame for the current line' })
+
 
 -- PLUGINS
 --
