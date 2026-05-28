@@ -5,9 +5,9 @@ do
     -- Enable faster startup by caching compiled Lua modules
     vim.loader.enable()
 
-    -- Set <space> as the leader key
+    -- Set <space> as the Leader key
     -- See `:h mapleader`
-    -- NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
+    -- NOTE: Must happen before plugins are loaded (otherwise wrong Leader will be used)
     vim.g.mapleader = ' '
     vim.g.maplocalleader = ' '
 
@@ -154,18 +154,50 @@ do
     vim.keymap.set('n', ']l', ':lnext<CR>zz')
     vim.keymap.set('n', '[l', ':lprev<CR>zz')
 
+    -- Prepare a search-and-replace for the `word` under the cursor.
+    --
+    -- Uses registers (CTRL-R) to insert the object (CTRL-W) under the cursor,
+    -- sets the range to the whole file (:%s/), and adds the flags `gI` (global in line, ignore-case),
+    -- sends three <Left> keystrokes to place the command-line cursor inside the replacement field so
+    -- the user can type the new text before confirming.
+    vim.keymap.set( 'n', '<Leader>s',
+        [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]]
+    )
+
+    -- Open a new tab page with the content of the current file.
+    vim.keymap.set('n', '<Leader>tn', ':tabnew %<CR>')
+    -- Close the current tab page.
+    vim.keymap.set('n', '<Leader>tc', ':tabclose<CR>')
+
+    -- Yank text into the system clipboard (register +).
+    --
+    -- Usage: press <Leader>y then a motion (normal mode) or select text (visual mode).
+    --  - <Leader>yiw           - yank a word under the cursor.
+    --  - v{motion}<Leader>y    - yank selection in visual mode.
+    vim.keymap.set({ 'n', 'v' }, '<Leader>y', [["+y]])
+
+    -- Change current window height/width with arrows.
+    vim.keymap.set('n', '<C-Up>', ':resize +2<CR>')
+    vim.keymap.set('n', '<C-Down>', ':resize -2<CR>')
+    vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>')
+    vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>')
+
+    -- Keep visual selection after indenting so you can
+    -- apply the same indent/unindent operation multiple times.
+    vim.keymap.set('v', '<', '<gv')
+    vim.keymap.set('v', '>', '>gv')
+
+    -- Move the current line up/down and fix the indentation.
+    vim.keymap.set('n', '<A-j>', [[:move .+1<CR>==]])
+    vim.keymap.set('n', '<A-k>', [[:move .-2<CR>==]])
+
+    -- Move selected line (or block of text) up/down, fix the indentation, and
+    -- keep visual selection.
+    vim.keymap.set({'v', 'x'}, '<A-j>', [[:move '>+1<CR>gv=gv]])
+    vim.keymap.set({'v', 'x'}, '<A-k>', [[:move '<-2<CR>gv=gv]])
+
     -- Use <Esc> to exit terminal mode
     vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
-
-    -- Map <A-j>, <A-k>, <A-h>, <A-l> to navigate between windows in any modes
-    vim.keymap.set({ 't', 'i' }, '<A-h>', '<C-\\><C-n><C-w>h')
-    vim.keymap.set({ 't', 'i' }, '<A-j>', '<C-\\><C-n><C-w>j')
-    vim.keymap.set({ 't', 'i' }, '<A-k>', '<C-\\><C-n><C-w>k')
-    vim.keymap.set({ 't', 'i' }, '<A-l>', '<C-\\><C-n><C-w>l')
-    vim.keymap.set({ 'n' }, '<A-h>', '<C-w>h')
-    vim.keymap.set({ 'n' }, '<A-j>', '<C-w>j')
-    vim.keymap.set({ 'n' }, '<A-k>', '<C-w>k')
-    vim.keymap.set({ 'n' }, '<A-l>', '<C-w>l')
 end
 
 -- ============================
