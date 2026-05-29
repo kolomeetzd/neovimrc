@@ -306,10 +306,19 @@ do
         'https://github.com/stevearc/quicker.nvim',
         -- Git integration
         'https://github.com/lewis6991/gitsigns.nvim',
+        -- Colorscheme based on Atom's One Dark
+        'https://github.com/navarasu/onedark.nvim',
     })
 
     require('fzf-lua').setup { fzf_colors = true }
     require('mini.completion').setup {}
     require('quicker').setup {}
     require('gitsigns').setup {}
+
+    require('onedark').setup {
+        style = 'warm',
+        toggle_style_key = '<Leader>ts',
+        transparent = true,
+    }
+    require('onedark').load()
 end
