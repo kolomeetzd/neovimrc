@@ -308,6 +308,9 @@ do
         'https://github.com/lewis6991/gitsigns.nvim',
         -- Colorscheme based on Atom's One Dark
         'https://github.com/navarasu/onedark.nvim',
+        -- Easy configurable statusline
+        'https://github.com/nvim-tree/nvim-web-devicons',
+        'https://github.com/nvim-lualine/lualine.nvim',
     })
 
     require('fzf-lua').setup { fzf_colors = true }
@@ -321,4 +324,36 @@ do
         transparent = true,
     }
     require('onedark').load()
+
+    require('lualine').setup {
+        options = {
+            theme = 'onedark',
+            component_separators = { left = '', right = '' },
+            section_separators = { left = '', right = '' },
+        },
+        sections = {
+            lualine_c = {
+                {
+                    'filename',
+                    -- Display new file status (new file means no write after created)
+                    -- default: false
+                    newfile_status = true,
+                    -- Show relative path
+                    -- default: 0 - just a filename
+                    path = 1, 
+                },
+            },
+            lualine_x = {
+                function()
+                    return 'indent: ' .. vim.api.nvim_get_option_value('shiftwidth', {})
+                end,
+                'encoding',
+                {
+                    'filetype',
+                    icons_enabled = false,
+                    icon = nil,
+                },
+            },
+        },
+    }
 end
