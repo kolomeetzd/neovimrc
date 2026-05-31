@@ -283,7 +283,37 @@ do
 end
 
 -- =====================
--- SECTION 5: Plugins
+-- SECTION 5: LSP Settings
+-- =====================
+do
+    -- LSP configuration using Neovim built-in client
+    -- See: <https://luals.github.io/wiki/configuration/#using-built-in-lsp-client>
+    vim.lsp.config('lua_ls', {
+        cmd = { 'lua-language-server' }, -- installed via package manager
+        filetypes = { 'lua' },
+        -- Sets the "workspace" to the directory where any of these files is found.
+        root_markers = {
+            ".luarc.json",
+            ".luarc.jsonc",
+            ".luacheckrc",
+            ".stylua.toml",
+            ".git",
+        },
+        settings = {
+            Lua = {
+                runtime = {
+                    version = 'LuaJIT',
+                }
+            }
+        }
+    })
+
+    -- Now that the language server is configured, it must be enabled
+    vim.lsp.enable('lua_ls')
+end
+
+-- =====================
+-- SECTION 6: Plugins
 -- =====================
 do
     -- Installing and configuring plugins
@@ -296,8 +326,6 @@ do
 
     -- Install third-party plugins via "vim.pack.add()".
     vim.pack.add({
-        -- Quickstart configs for LSP
-        'https://github.com/neovim/nvim-lspconfig',
         -- Fuzzy picker
         'https://github.com/ibhagwan/fzf-lua',
         -- Autocompletion
