@@ -208,13 +208,12 @@ do
     --
     -- See `:h lua-guide-autocommands`, `:h autocmd`, `:h nvim_create_autocmd()`
 
-    local augroup = vim.api.nvim_create_augroup
-    local CursorUserGroup = augroup('CursorUserGroup', { clear = true })
+    local restore_cursor = vim.api.nvim_create_augroup('user-restore-cursor', { clear = true })
 
     -- Restore the cursor position when last exiting the current buffer.
     -- For the Vimscript-style autocmd, see `:help last-position-jump`.
     vim.api.nvim_create_autocmd('BufReadPre', {
-        group = CursorUserGroup,
+        group = restore_cursor,
         pattern = '*',
         desc = 'Restore cursor last position',
         callback = function(args)
@@ -222,7 +221,7 @@ do
 
             vim.api.nvim_create_autocmd('FileType', {
                 buf = bufnr,
-                group = CursorUserGroup,
+                group = restore_cursor,
                 once = true,
                 callback = function()
                     -- Get saved mark for the cursor position `{row,col}`.
@@ -284,8 +283,54 @@ end
 
 -- =====================
 -- SECTION 5: LSP Settings
+-- LSP keymaps, server configuration, Mason tools installations
 -- =====================
 do
+    vim.api.nvim_create_autocmd('LspAttach', {
+        group = vim.api.nvim_create_augroup('user-lsp-attach', { clear = true }),
+        callback = function(event)
+            -- A function that lets us more easily define mappings specific for LSP related items.
+            local map = function(keys, func, desc, mode)
+                mode = mode or 'n'
+                vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+            end
+
+            -- Rename the variable under your cursor.
+            map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
+            -- Execute a code action.
+            map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
+            -- This is Goto Declaration (not Goto Definition).
+            map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+            local client = vim.lsp.get_client_by_id(event.data.client_id)
+            if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+                local highlight_augroup = vim.api.nvim_create_augroup('user-lsp-highlight', { clear = false })
+                -- The following autocommand is used to highlight references of the
+                -- word under the cursor.
+                vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+                    buffer = event.buf,
+                    group = highlight_augroup,
+                    callback = vim.lsp.buf.document_highlight,
+                })
+
+                -- When you move your cursor, the highlights will be cleared.
+                vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+                    buffer = event.buf,
+                    group = highlight_augroup,
+                    callback = vim.lsp.buf.clear_references,
+                })
+
+                vim.api.nvim_create_autocmd('LspDetach', {
+                    group = vim.api.nvim_create_augroup('user-lsp-detach', { clear = true }),
+                    callback = function(ev)
+                        vim.lsp.buf.clear_references()
+                        vim.api.nvim_clear_autocmds { group = 'user-lsp-highlight', buffer = ev.buf }
+                    end,
+                })
+            end
+        end
+    })
+
     -- LSP configuration using Neovim built-in client
     -- See: <https://luals.github.io/wiki/configuration/#using-built-in-lsp-client>
     vim.lsp.config('lua_ls', {
