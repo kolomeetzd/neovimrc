@@ -284,29 +284,17 @@ end
 -- =====================
 -- SECTION 5: LSP Settings
 -- LSP keymaps, server configuration, Mason tools installations
+-- Defautl keymaps: <https://neovim.io/doc/user/lsp/#lsp-defaults>
 -- =====================
 do
+    --  This function gets run when an LSP attaches to a particular buffer.
     vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('user-lsp-attach', { clear = true }),
         callback = function(event)
-            -- A function that lets us more easily define mappings specific for LSP related items.
-            local map = function(keys, func, desc, mode)
-                mode = mode or 'n'
-                vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
-            end
-
-            -- Rename the variable under your cursor.
-            map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-            -- Execute a code action.
-            map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-            -- This is Goto Declaration (not Goto Definition).
-            map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
-
+            -- The following autocommand is used to highlight references of the word under your cursor.
             local client = vim.lsp.get_client_by_id(event.data.client_id)
             if client and client:supports_method('textDocument/documentHighlight', event.buf) then
                 local highlight_augroup = vim.api.nvim_create_augroup('user-lsp-highlight', { clear = false })
-                -- The following autocommand is used to highlight references of the
-                -- word under the cursor.
                 vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
                     buffer = event.buf,
                     group = highlight_augroup,
@@ -328,33 +316,64 @@ do
                     end,
                 })
             end
-        end
+
+        end,
     })
 
-    -- LSP configuration using Neovim built-in client
-    -- See: <https://luals.github.io/wiki/configuration/#using-built-in-lsp-client>
-    vim.lsp.config('lua_ls', {
-        cmd = { 'lua-language-server' }, -- installed via package manager
-        filetypes = { 'lua' },
-        -- Sets the "workspace" to the directory where any of these files is found.
-        root_markers = {
-            ".luarc.json",
-            ".luarc.jsonc",
-            ".luacheckrc",
-            ".stylua.toml",
-            ".git",
+    -- Enable the following language servers
+    -- See `:help lsp-config` for information about keys and how to configure
+    ---@type table<string, vim.lsp.Config>
+    local servers = {
+        -- clangd = {},
+        -- gopls = {},
+
+        stylua = {}, -- Used to format Lua code
+
+        -- Special Lua Config, as recommended by neovim help docs
+        lua_ls = {
+            on_init = function(client)
+                -- Disable formatting (formatting is done by stylua)
+                client.server_capabilities.documentFormattingProvider = false
+
+                if client.workspace_folders then
+                    local path = client.workspace_folders[1].name
+                    if path ~= vim.fn.stdpath 'config'
+                        and (vim.uv.fs_stat(path .. '/.luarc.json')
+                        or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then
+                        return
+                    end
+                end
+
+                client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+                    runtime = {
+                        version = 'LuaJIT',
+                        path = { 'lua/?.lua', 'lua/?/init.lua' },
+                    },
+                    workspace = {
+                        checkThirdParty = false,
+                        -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
+                        -- See https://github.com/neovim/nvim-lspconfig/issues/3189
+                        library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
+                            '${3rd}/luv/library',
+                            '${3rd}/busted/library',
+                        }),
+                    },
+                })
+            end,
+            ---@type lspconfig.settings.lua_ls
+            settings = {
+                Lua = {
+                    -- Disable formatting (formatting is done by stylua)
+                    format = { enable = false }, 
+                },
+            },
         },
-        settings = {
-            Lua = {
-                runtime = {
-                    version = 'LuaJIT',
-                }
-            }
-        }
-    })
+    }
 
-    -- Now that the language server is configured, it must be enabled
-    vim.lsp.enable('lua_ls')
+    for name, server in pairs(servers) do
+        vim.lsp.config(name, server)
+        vim.lsp.enable(name)
+    end
 end
 
 -- =====================
@@ -371,6 +390,8 @@ do
 
     -- Install third-party plugins via "vim.pack.add()".
     vim.pack.add({
+        -- Quickstart configs for LSP
+        'https://github.com/neovim/nvim-lspconfig',
         -- Fuzzy picker
         'https://github.com/ibhagwan/fzf-lua',
         -- Autocompletion
