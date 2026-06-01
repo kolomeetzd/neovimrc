@@ -1,6 +1,4 @@
--- =====================================================
--- SECTION 1: Core Neovim settings, leaders, options
--- =====================================================
+--[ Basics: core settings, leaders, options
 do
     -- Enable faster startup by caching compiled Lua modules
     vim.loader.enable()
@@ -126,14 +124,9 @@ do
     vim.o.exrc = true
 end
 
--- =========================
--- SECTION 2: Key mapping
--- =========================
+--[ Key mappings
+--  See `:h vim.keymap.set()`, `:h mapping`, `:h keycodes`
 do
-    -- Keymaps
-    --
-    -- See `:h vim.keymap.set()`, `:h mapping`, `:h keycodes`
-
     -- Open Netrw (defaults to: re-using the same window).
     vim.keymap.set('n', '<Leader>pv', vim.cmd.Ex)
 
@@ -200,14 +193,9 @@ do
     vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 end
 
--- ============================
--- SECTION 3: Event handlers
--- ============================
+--[ Event handler
+--  See `:h lua-guide-autocommands`, `:h autocmd`, `:h nvim_create_autocmd()`
 do
-    -- Autocommands
-    --
-    -- See `:h lua-guide-autocommands`, `:h autocmd`, `:h nvim_create_autocmd()`
-
     local restore_cursor = vim.api.nvim_create_augroup('user-restore-cursor', { clear = true })
 
     -- Restore the cursor position when last exiting the current buffer.
@@ -265,14 +253,9 @@ do
     })
 end
 
--- ===========================
--- SECTION 4: User commands
--- ===========================
+--[ User commands
+--  See `:h nvim_create_user_command()` and `:h user-commands`
 do
-    -- Define custom commands
-    --
-    -- See `:h nvim_create_user_command()` and `:h user-commands`
-
     -- Create a command `:GitBlameLine` that print the git blame for the current line
     vim.api.nvim_create_user_command('GitBlameLine', function()
         local line_number = vim.fn.line('.') -- Get the current line number. See `:h line()`
@@ -281,11 +264,8 @@ do
     end, { desc = 'Print the git blame for the current line' })
 end
 
--- =====================
--- SECTION 5: LSP Settings
--- LSP keymaps, server configuration, Mason tools installations
--- Defautl keymaps: <https://neovim.io/doc/user/lsp/#lsp-defaults>
--- =====================
+--[ LSP: server configs, keymaps
+--  See: `:h lsp-quickstart` and `:h lsp-defaults`
 do
     --  This function gets run when an LSP attaches to a particular buffer.
     vim.api.nvim_create_autocmd('LspAttach', {
@@ -376,14 +356,9 @@ do
     end
 end
 
--- =====================
--- SECTION 6: Plugins
--- =====================
+--[ Plugins: installing and configuration
+--  See `:h :packadd`, `:h vim.pack`
 do
-    -- Installing and configuring plugins
-    --
-    -- See `:h :packadd`, `:h vim.pack`
-
     -- Add the "nohlsearch" package to automatically disable search highlighting after
     -- 'updatetime' and when going to insert mode.
     vim.cmd('packadd! nohlsearch')
