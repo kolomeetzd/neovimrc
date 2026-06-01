@@ -1,7 +1,10 @@
 --[ Basics: core settings, leaders, options
+--  See `:h vim.o`, `:h vim.g`, and `:h option-list`
 do
     -- Enable faster startup by caching compiled Lua modules
     vim.loader.enable()
+
+    --[ Globals
 
     -- Set <space> as the Leader key
     -- See `:h mapleader`
@@ -20,13 +23,8 @@ do
     -- Reduce initial size of a new windows.
     vim.g.netrw_winsize = 25
 
-    -- Options
-    --
-    -- See `:h vim.o`
-    -- NOTE: You can change these options as you wish!
-    -- For more options, you can see `:h option-list`
+    --[ Options (buffer/window scoped)
     -- To see documentation for an option, you can use `:h 'optionname'`, for example `:h 'number'`
-    -- (Note the single quotes)
 
     -- Show line numbers in a column.
     vim.o.number = true
@@ -43,8 +41,8 @@ do
     -- Every wrapped line will continue visually indented.
     vim.o.breakindent = true
     --[[
-    -- NOTE: Experimenting with `breakindent` option, so
-    -- I'm keeping these `nowrap` settings commented out for now.
+    -- NOTE: I'm experimenting with `breakindent` option, so
+    -- keeping these `nowrap` settings commented out for now.
     --
     -- When off lines will not wrap and only part of long lines will be displayed.
     vim.o.wrap = false
@@ -69,7 +67,7 @@ do
     -- Sets how Neovim will display certain whitespace characters in the editor.
     vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
-    -- Case-insensitive searching;
+    -- Case-insensitive searching.
     vim.o.ignorecase = true
     -- UNLESS \C or one or more capital letters in the search term.
     vim.o.smartcase = true
@@ -84,7 +82,7 @@ do
     -- Hide the name of the current mode at the cmdline.
     vim.o.showmode = false
 
-    -- NOTE: I want default behavior, so I'm keeping it commented out for now.
+    -- NOTE: I want default behavior, so keeping it commented out for now.
     --
     -- Do not show the line with tab page labels.
     -- vim.o.showtabline = 0
@@ -262,6 +260,32 @@ do
         local filename = vim.api.nvim_buf_get_name(0)
         print(vim.system({ 'git', 'blame', '-L', line_number .. ',+1', filename }):wait().stdout)
     end, { desc = 'Print the git blame for the current line' })
+end
+
+--[ Diagnostic: config and keymaps
+--  See `:help vim.diagnostic.Opts`
+do
+    vim.diagnostic.config({
+        update_in_insert = false,
+        severity_sort = true,
+        float = { border = 'rounded', source = 'if_many' },
+        underline = { severity = { min = vim.diagnostic.severity.WARN } },
+
+        virtual_text = true,
+        virtual_lines = false,
+
+        jump = {
+            on_jump = function (_, bufnr)
+                vim.diagnostic.open_float({
+                    bufnr = bufnr,
+                    scope = 'cursor',
+                    focus = false,
+                })
+            end,
+        },
+    })
+
+    vim.keymap.set('n', '<Leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]ickfix list' })
 end
 
 --[ LSP: server configs, keymaps
