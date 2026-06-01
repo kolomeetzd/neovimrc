@@ -226,9 +226,9 @@ do
                 callback = function()
                     -- Get saved mark for the cursor position `{row,col}`.
                     local pos = vim.api.nvim_buf_get_mark(bufnr, '"')
-                    local row, col = pos[1], pos[2]
 
                     -- Validate row.
+                    local row = pos[1]
                     if type(row) ~= 'number' or row < 1
                         or row > vim.api.nvim_buf_line_count(bufnr) then
                         return
@@ -364,7 +364,7 @@ do
             settings = {
                 Lua = {
                     -- Disable formatting (formatting is done by stylua)
-                    format = { enable = false }, 
+                    format = { enable = false },
                 },
             },
         },
@@ -434,7 +434,7 @@ do
                     newfile_status = true,
                     -- Show relative path
                     -- default: 0 - just a filename
-                    path = 1, 
+                    path = 1,
                 },
             },
             lualine_x = {
