@@ -104,7 +104,7 @@ do
     -- Decrease update time (mostly for the autocommand events).
     vim.o.updatetime = 250
     -- Decrease mapped sequence wait time.
-    vim.o.timeoutlen = 300
+    vim.o.timeoutlen = 1000
     -- Time in milliseconds to wait for a key code sequence to complete.
     vim.o.ttimeoutlen = 100
 
