@@ -278,9 +278,6 @@ do
 
     vim.pack.add(telescope_plugins)
 
-    local builtin = require('telescope.builtin')
-    local themes = require('telescope.themes')
-
     require('telescope').setup({
         defaults = {
             vimgrep_arguments = {
@@ -348,13 +345,34 @@ do
             },
         },
         extensions = {
-            ['ui-select'] = { themes.get_dropdown({ previewer = false }) },
+            ['ui-select'] = { require('telescope.themes').get_dropdown({ previewer = false }) },
         },
     })
 
     -- Enable Telescope extensions if they are installed
     pcall(require('telescope').load_extension, 'fzf')
     pcall(require('telescope').load_extension, 'ui-select')
+
+    local builtin = require('telescope.builtin')
+    local themes = require('telescope.themes')
+
+    --[ Colors
+    vim.api.nvim_create_autocmd('ColorScheme', {
+        group = vim.api.nvim_create_augroup('telescope-border-colors', { clear = true }),
+        desc = 'Reset colors for Telescope prompt, preview and results',
+        callback = function()
+            local hl_groups = {
+                'TelescopePromptBorder',
+                'TelescopePromptPrefix',
+                'TelescopePreviewBorder',
+                'TelescopeResultsBorder',
+            }
+
+            for _, hl in ipairs(hl_groups) do
+                vim.api.nvim_set_hl(0, hl, { bg = 'none' })
+            end
+        end
+    })
 
     ----[ Built-ins (including Telescope)
 
@@ -518,8 +536,6 @@ do
             end, { desc = 'Open Outgoing Calls' })
         end,
     })
-
-
 end
 
 --[ Diagnostic: config and keymaps
