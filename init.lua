@@ -422,9 +422,10 @@ do
     local themes = require('telescope.themes')
 
     --[ Colors
-    vim.api.nvim_create_autocmd('ColorScheme', {
+    vim.api.nvim_create_autocmd('VimEnter', {
         group = vim.api.nvim_create_augroup('telescope-border-colors', { clear = true }),
         desc = 'Reset colors for Telescope prompt, preview and results',
+        once = true,
         callback = function()
             local hl_groups = {
                 'TelescopePromptBorder',
