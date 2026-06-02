@@ -194,10 +194,13 @@ end
 --[ Event handler
 --  See `:h lua-guide-autocommands`, `:h autocmd`, `:h nvim_create_autocmd()`
 do
-    local restore_cursor = vim.api.nvim_create_augroup('user-restore-cursor', { clear = true })
+    local augroup = function(name)
+        return vim.api.nvim_create_augroup('custom_' .. name, { clear = true })
+    end
 
     -- Restore the cursor position when last exiting the current buffer.
     -- For the Vimscript-style autocmd, see `:help last-position-jump`.
+    local restore_cursor = augroup('restore-cursor')
     vim.api.nvim_create_autocmd('BufReadPre', {
         group = restore_cursor,
         pattern = '*',
@@ -244,6 +247,7 @@ do
     -- Highlight when yanking (copying) text.
     -- Try it with `yap` in normal mode. See `:h vim.hl.on_yank()`
     vim.api.nvim_create_autocmd('TextYankPost', {
+        group = augroup('highlight-yank'),
         desc = 'Highlight when yanking (copying) text',
         callback = function()
             vim.hl.on_yank()
@@ -260,6 +264,67 @@ do
         local filename = vim.api.nvim_buf_get_name(0)
         print(vim.system({ 'git', 'blame', '-L', line_number .. ',+1', filename }):wait().stdout)
     end, { desc = 'Print the git blame for the current line' })
+end
+
+--[ UI: colorscheme and statusline
+do
+    ----[ Install plugins
+    ---@type (string|vim.pack.Spec)[]
+    local ui_plugins = {
+        -- Colorscheme based on Atom's One Dark
+        'https://github.com/navarasu/onedark.nvim',
+        -- Easy configurable statusline
+        'https://github.com/nvim-tree/nvim-web-devicons',
+        'https://github.com/nvim-lualine/lualine.nvim',
+    }
+
+    vim.pack.add(ui_plugins)
+
+    ----[ Configure colorscheme
+    local colors_opts = {
+        style = 'warm',
+        toggle_style_key = '<Leader>ts',
+        transparent = true,
+    }
+
+    ----[ Configure statusline
+    local statusline_opts = {
+        options = {
+            theme = 'onedark',
+            component_separators = { left = '', right = '' },
+            section_separators = { left = '', right = '' },
+        },
+        sections = {
+            lualine_c = {
+                {
+                    'filename',
+                    -- Display new file status (new file means no write after created)
+                    -- default: false
+                    newfile_status = true,
+                    -- Show relative path
+                    -- default: 0 - just a filename
+                    path = 1,
+                },
+            },
+            lualine_x = {
+                function()
+                    return 'indent: ' .. vim.api.nvim_get_option_value('shiftwidth', {})
+                end,
+                'encoding',
+                {
+                    'filetype',
+                    icons_enabled = false,
+                    icon = nil,
+                },
+            },
+        },
+    }
+
+    ----[ Setup and load
+    require('onedark').setup(colors_opts)
+    require('onedark').load()
+
+    require('lualine').setup(statusline_opts)
 end
 
 --[ Navigation: Telescope setup, keymaps, LSP picker mappings
@@ -679,54 +744,10 @@ do
         'https://github.com/stevearc/quicker.nvim',
         -- Git integration
         'https://github.com/lewis6991/gitsigns.nvim',
-        -- Colorscheme based on Atom's One Dark
-        'https://github.com/navarasu/onedark.nvim',
-        -- Easy configurable statusline
-        'https://github.com/nvim-tree/nvim-web-devicons',
-        'https://github.com/nvim-lualine/lualine.nvim',
     })
 
     require('fzf-lua').setup { fzf_colors = true }
     require('mini.completion').setup {}
     require('quicker').setup {}
     require('gitsigns').setup {}
-
-    require('onedark').setup {
-        style = 'warm',
-        toggle_style_key = '<Leader>ts',
-        transparent = true,
-    }
-    require('onedark').load()
-
-    require('lualine').setup {
-        options = {
-            theme = 'onedark',
-            component_separators = { left = '', right = '' },
-            section_separators = { left = '', right = '' },
-        },
-        sections = {
-            lualine_c = {
-                {
-                    'filename',
-                    -- Display new file status (new file means no write after created)
-                    -- default: false
-                    newfile_status = true,
-                    -- Show relative path
-                    -- default: 0 - just a filename
-                    path = 1,
-                },
-            },
-            lualine_x = {
-                function()
-                    return 'indent: ' .. vim.api.nvim_get_option_value('shiftwidth', {})
-                end,
-                'encoding',
-                {
-                    'filetype',
-                    icons_enabled = false,
-                    icon = nil,
-                },
-            },
-        },
-    }
 end
