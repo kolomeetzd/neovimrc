@@ -623,6 +623,13 @@ do
                     end
                 end
 
+                -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
+                -- See: https://github.com/neovim/nvim-lspconfig/issues/3189
+                local runtime_files = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
+                    '${3rd}/luv/library',
+                    '${3rd}/busted/library',
+                })
+
                 client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
                     runtime = {
                         version = 'LuaJIT',
@@ -630,12 +637,10 @@ do
                     },
                     workspace = {
                         checkThirdParty = false,
-                        -- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-                        -- See https://github.com/neovim/nvim-lspconfig/issues/3189
-                        library = vim.tbl_extend('force', vim.api.nvim_get_runtime_file('', true), {
-                            '${3rd}/luv/library',
-                            '${3rd}/busted/library',
-                        }),
+                        -- See: <https://github.com/neovim/nvim-lspconfig/issues/3189#issuecomment-3021345989>
+                        library = vim.tbl_filter(function(d)
+                            return not d:match(vim.fn.stdpath('config') .. '/?a?f?t?e?r?')
+                        end, runtime_files),
                     },
                 })
             end,
