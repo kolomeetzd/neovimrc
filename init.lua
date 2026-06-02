@@ -19,7 +19,7 @@ do
     -- Do not show netrw banner.
     vim.g.netrw_banner = 0
     -- Use tree style listing.
-    vim.g.netrw_liststyle = 3
+    vim.g.netrw_liststyle = 0
     -- Reduce initial size of a new windows.
     vim.g.netrw_winsize = 25
 
