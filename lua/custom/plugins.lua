@@ -7,6 +7,7 @@ local plugins_list = {
     'custom.plugins.statusline',
     'custom.plugins.lsp',
     'custom.plugins.telescope',
+    'custom.plugins.gitsigns',
 }
 
 for _, name in ipairs(plugins_list) do
