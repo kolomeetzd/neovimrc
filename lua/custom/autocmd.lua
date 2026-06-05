@@ -61,3 +61,24 @@ vim.api.nvim_create_autocmd('TextYankPost', {
         vim.hl.on_yank()
     end,
 })
+
+-- This autocommand runs after a plugin is installed or updated.
+--
+-- See `:help vim.pack-events`
+vim.api.nvim_create_autocmd('PackChanged', {
+    group = augroup('run-build'),
+    desc = 'Run the appropriate build command for a plugin',
+    callback = function(ev)
+        local utils = require('custom.utils')
+
+        local name = ev.data.spec.name
+        local kind = ev.data.kind
+        if kind ~= 'install' and kind ~= 'update' then return end
+
+        -- See: <https://github.com/nvim-telescope/telescope-fzf-native.nvim#installation>
+        if name == 'telescope-fzf-native.nvim' and vim.fn.executable 'make' == 1 then
+            utils.run_build(name, { 'make' }, ev.data.path)
+            return
+        end
+    end,
+})

@@ -8,6 +8,8 @@ local source_list = {
     'https://github.com/nvim-lua/plenary.nvim',
     'https://github.com/nvim-telescope/telescope.nvim',
     'https://github.com/nvim-telescope/telescope-ui-select.nvim',
+    -- Fuzzy picker
+    'https://github.com/ibhagwan/fzf-lua',
 }
 
 if vim.fn.executable 'make' == 1 then

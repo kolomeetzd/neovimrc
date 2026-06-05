@@ -35,8 +35,6 @@ do
 
     -- Install third-party plugins via "vim.pack.add()".
     vim.pack.add({
-        -- Fuzzy picker
-        'https://github.com/ibhagwan/fzf-lua',
         -- Autocompletion
         'https://github.com/nvim-mini/mini.completion',
         -- Enhanced quickfix/loclist
