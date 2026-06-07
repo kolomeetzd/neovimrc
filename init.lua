@@ -35,14 +35,9 @@ do
 
     -- Install third-party plugins via "vim.pack.add()".
     vim.pack.add({
-        -- Autocompletion
-        'https://github.com/nvim-mini/mini.completion',
         -- Enhanced quickfix/loclist
         'https://github.com/stevearc/quicker.nvim',
     })
 
-    require('fzf-lua').setup { fzf_colors = true }
-    require('mini.completion').setup {}
     require('quicker').setup {}
-    require('gitsigns').setup {}
 end
