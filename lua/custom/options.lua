@@ -107,3 +107,6 @@ vim.o.swapfile = false
 -- Nvim will execute any .nvimrc or .exrc file found in the cwd, if the file in the trust list.
 -- For more info, see `:h trust`.
 vim.o.exrc = true
+
+-- Russian keymaps
+vim.o.langmap='ФИСВУАПРШОЛДЬТЩЗЙКЫЕГМЦЧНЯ;ABCDEFGHIJKLMNOPQRSTUVWXYZ,фисвуапршолдьтщзйкыегмцчня;abcdefghijklmnopqrstuvwxyz'
