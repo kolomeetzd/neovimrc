@@ -35,9 +35,6 @@ local cmp_opts = {
     completion = {
         documentation = { auto_show = false, auto_show_delay_ms = 500 },
     },
-    sources = {
-        default = { 'lsp', 'path', 'snippets' },
-    },
     snippets = { preset = 'luasnip' },
     -- By default, it uses the Lua implementation, but user may enable
     -- the rust implementation via `'prefer_rust_with_warning'`
