@@ -118,6 +118,7 @@ local servers = {
     },
     -- Helps with golangci-lint config files.
     ['golangci_lint_ls'] = {},
+    clangd = {}, -- Use defaults from nvim-lspconfig
 }
 
 -- Apply config and enable language server
