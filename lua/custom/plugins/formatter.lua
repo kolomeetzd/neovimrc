@@ -16,7 +16,7 @@ local conform_opts = {
     format_on_save = function(bufnr)
         -- You can specify filetypes to autoformat on save here:
         local enabled_filetypes = {
-            lua = true,
+            -- lua = true,
         }
         if (not vim.g.disable_autoformat or not vim.b[bufnr].disable_autoformat)
             or enabled_filetypes[vim.bo[bufnr].filetype] then
