@@ -7,6 +7,8 @@
 local source_list = {
     -- Quickstart configs for LSP
     'https://github.com/neovim/nvim-lspconfig',
+    -- Useful status updates for LSP
+    'https://github.com/j-hui/fidget.nvim',
 }
 
 vim.pack.add(source_list)
@@ -110,9 +112,9 @@ local servers = {
                     shadow = true,
                 },
                 staticcheck = true,
-                buildFlags = { "-tags=integration,mock,e2e" },
+                buildFlags = { '-tags=integration,mock,e2e' },
                 gofumpt = true,
-                diagnosticsDelay = "250ms",
+                diagnosticsDelay = '250ms',
             },
         },
     },
@@ -129,3 +131,5 @@ end
 
 ----[ Setup
 -- NOTE: nvim-lspconfig doesn't require calling `setup()`
+
+require('fidget').setup()
