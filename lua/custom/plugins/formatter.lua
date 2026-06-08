@@ -18,15 +18,17 @@ local conform_opts = {
         local enabled_filetypes = {
             -- lua = true,
         }
-        if (not vim.g.disable_autoformat or not vim.b[bufnr].disable_autoformat)
-            or enabled_filetypes[vim.bo[bufnr].filetype] then
-            return { timeout_ms = 500 }
-        else
+        if (vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat)
+            or not enabled_filetypes[vim.bo[bufnr].filetype] then
             return nil
+        else
+            return { lsp_format = 'fallback', timeout_ms = 500 }
         end
     end,
     default_format_opts = {
-        lsp_format = 'fallback', -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
+        -- Use external formatters if configured below, otherwise
+        -- use LSP formatting. Set to `false` to disable LSP formatting entirely.
+        lsp_format = 'fallback',
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
