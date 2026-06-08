@@ -63,3 +63,6 @@ vim.keymap.set({'v', 'x'}, '<A-k>', [[:move '<-2<CR>gv=gv]])
 
 -- Use <Esc> to exit terminal mode
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
+
+-- Press jk fast to exit insert mode
+vim.keymap.set("i", "jk", "<ESC>")
