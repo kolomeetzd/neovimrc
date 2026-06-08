@@ -10,6 +10,7 @@ local plugins_list = {
     'custom.plugins.gitsigns',
     'custom.plugins.snippets',
     'custom.plugins.cmp',
+    'custom.plugins.formatter',
 }
 
 for _, name in ipairs(plugins_list) do
