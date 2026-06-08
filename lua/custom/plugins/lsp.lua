@@ -51,9 +51,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
 -- See `:help lsp-config` for information about keys and how to configure
 ---@type table<string, vim.lsp.Config>
 local servers = {
-    -- clangd = {},
-    -- gopls = {},
-
     stylua = {}, -- Used to format Lua code
 
     -- Special Lua Config, as recommended by neovim help docs
@@ -100,6 +97,27 @@ local servers = {
             },
         },
     },
+    -- Golang LSP configuration
+    gopls = {
+        ---@type lspconfig.settings.gopls
+        settings = {
+            -- See: <https://github.com/golang/tools/blob/master/gopls/doc/settings.md>
+            gopls = {
+                usePlaceholders = true,
+                -- See: <https://github.com/golang/tools/blob/master/gopls/doc/analyzers.md>
+                analyses = {
+                    unusedparams = true,
+                    shadow = true,
+                },
+                staticcheck = true,
+                buildFlags = { "-tags=integration,mock,e2e" },
+                gofumpt = true,
+                diagnosticsDelay = "250ms",
+            },
+        },
+    },
+    -- Helps with golangci-lint config files.
+    ['golangci_lint_ls'] = {},
 }
 
 -- Apply config and enable language server
