@@ -11,6 +11,7 @@ local plugins_list = {
     'custom.plugins.snippets',
     'custom.plugins.cmp',
     'custom.plugins.formatter',
+    'custom.plugins.linter',
 }
 
 for _, name in ipairs(plugins_list) do
