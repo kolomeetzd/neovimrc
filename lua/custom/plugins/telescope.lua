@@ -139,12 +139,14 @@ vim.keymap.set('n', '<Leader>pb', function()
 end, { desc = 'Search in open buffers' })
 
 -- Git
--- NOTE: Currently unused, but kept commented for future reference
---
 -- List unstaged git files only
--- vim.keymap.set( 'n', '<Leader>gs', builtin.git_status, { desc = ':Telescope git_status' })
+vim.keymap.set( 'n', '<Leader>gs', function()
+    builtin.git_status()
+end, { desc = ':Telescope git_status' })
 -- List git commits with diff preview
--- vim.keymap.set( 'n', '<Leader>gc', builtin.git_commits, { desc = ':Telescope git_commits' })
+vim.keymap.set( 'n', '<Leader>gc', function()
+    builtin.git_commits()
+end, { desc = ':Telescope git_commits' })
 
 -- Search for an entry that matches patterns
 local search_picker_opts = themes.get_dropdown({
