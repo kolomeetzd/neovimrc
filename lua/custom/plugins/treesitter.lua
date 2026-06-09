@@ -8,11 +8,14 @@ local source_list = {
         src = 'https://github.com/nvim-treesitter/nvim-treesitter',
         version = 'main',
     },
+    -- Show code context
+    'https://github.com/nvim-treesitter/nvim-treesitter-context',
 }
 
 vim.pack.add(source_list)
 
 ----[ Configuration
+
 local parsers = {
     'bash',
     'c',
@@ -87,7 +90,14 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
+-- See `:help nvim-treesitter-context-config` for more options.
+local ctx_opts = {
+    enable = true, -- Enabled by default; can be disable later.
+    mode = 'topline' -- Choices: 'cursor', 'topline'
+}
+
 ----[ Setup
 
 -- Ensure parsers are installed
 require('nvim-treesitter').install(parsers)
+require('treesitter-context').setup(ctx_opts)
