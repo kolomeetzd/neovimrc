@@ -132,4 +132,4 @@ end
 ----[ Setup
 -- NOTE: nvim-lspconfig doesn't require calling `setup()`
 
-require('fidget').setup()
+require('fidget').setup({})
