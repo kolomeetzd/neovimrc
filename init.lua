@@ -6,11 +6,11 @@ do
     -- Set <space> as the Leader key
     -- See `:h mapleader`
     -- NOTE: Must happen before plugins are loaded (otherwise wrong Leader will be used)
-    vim.g.mapleader = ' '
-    vim.g.maplocalleader = ' '
+    vim.api.nvim_set_var('mapleader', ' ')
+    vim.api.nvim_set_var('maplocalleader', ' ')
 
     -- I use the "FiraCode Nerd Font" in the terminal.
-    vim.g.have_nerd_font = true
+    vim.api.nvim_set_var('have_nerd_font', true)
 
     -- Core settings and basic options
     require('custom.options')
