@@ -32,12 +32,4 @@ do
     -- Add the "nohlsearch" package to automatically disable search highlighting after
     -- 'updatetime' and when going to insert mode.
     vim.cmd('packadd! nohlsearch')
-
-    -- Install third-party plugins via "vim.pack.add()".
-    vim.pack.add({
-        -- Enhanced quickfix/loclist
-        'https://github.com/stevearc/quicker.nvim',
-    })
-
-    require('quicker').setup {}
 end

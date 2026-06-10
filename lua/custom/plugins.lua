@@ -6,13 +6,13 @@ local plugins_list = {
     'custom.plugins.colors',
     'custom.plugins.statusline',
     'custom.plugins.lsp',
-    'custom.plugins.telescope',
-    'custom.plugins.gitsigns',
     'custom.plugins.snippets',
     'custom.plugins.cmp',
     'custom.plugins.formatter',
     'custom.plugins.linter',
     'custom.plugins.treesitter',
+    'custom.plugins.telescope',
+    'custom.plugins.gitsigns',
 }
 
 for _, name in ipairs(plugins_list) do
