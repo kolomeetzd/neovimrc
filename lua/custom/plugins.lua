@@ -13,6 +13,7 @@ local plugins_list = {
     'custom.plugins.treesitter',
     'custom.plugins.telescope',
     'custom.plugins.gitsigns',
+    'custom.plugins.mini-surround',
 }
 
 for _, name in ipairs(plugins_list) do
