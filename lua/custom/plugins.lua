@@ -14,6 +14,7 @@ local plugins_list = {
     'custom.plugins.telescope',
     'custom.plugins.gitsigns',
     'custom.plugins.mini-surround',
+    'custom.plugins.undotree',
 }
 
 for _, name in ipairs(plugins_list) do
