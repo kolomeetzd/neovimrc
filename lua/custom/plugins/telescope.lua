@@ -43,9 +43,6 @@ local telescope_opts = {
         file_ignore_patterns = { '^.git/', '^vendor/' },
         prompt_prefix = '   ',
         selection_caret = '  ',
-        entry_prefix = '  ',
-        initial_mode = 'insert',
-        selection_strategy = 'reset',
         sorting_strategy = 'ascending',
         layout_strategy = 'horizontal',
         layout_config = {
@@ -71,7 +68,6 @@ local telescope_opts = {
             'truncate',
         },
         winblend = 0,
-        border = {},
         borderchars = {
             '─',
             '│',
@@ -199,7 +195,7 @@ end, { desc = '[S]earch [R]esume' })
 
 -- LSP
 local cursor_theme = themes.get_cursor({
-    path_display = 'tail',
+    path_display = { 'tail' },
     layout_config = {
         width = 0.70,
         height = 0.50,
