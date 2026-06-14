@@ -48,16 +48,8 @@ local telescope_opts = {
         layout_config = {
             horizontal = {
                 prompt_position = 'top',
-                preview_width = 0.55,
-                results_width = 0.8,
+                preview_width = 0.65,
             },
-            vertical = {
-                prompt_position = 'top',
-                mirror = false,
-            },
-            width = 0.87,
-            height = 0.80,
-            preview_cutoff = 120,
         },
         file_sorter = sorters.get_fuzzy_file,
         generic_sorter = sorters.get_generic_fuzzy_sorter,
@@ -65,7 +57,7 @@ local telescope_opts = {
         path_display = {
             -- see :h telescope.defaults.path_display
             -- shorten = { len = 1, exclude = { -1, -2 } },
-            'truncate',
+            'filename_first',
         },
         winblend = 0,
         borderchars = {
@@ -98,10 +90,26 @@ local telescope_opts = {
 ----[ Related keymaps
 
 -- Built-ins
--- See `:help telescope.builtin`
-vim.keymap.set('n', '<Leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
 
-vim.keymap.set('n', '<Leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+local builtin_opts = {
+    previewer = false,
+    prompt_title = false,
+    results_title = false,
+    sorting_strategy = 'descending',
+    layout_strategy = 'center',
+    layout_config = {
+        prompt_position = 'bottom',
+    },
+}
+
+-- See `:help telescope.builtin`
+vim.keymap.set('n', '<Leader>sh', function()
+    builtin.help_tags(builtin_opts)
+end, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<Leader>ss', function()
+    builtin.builtin(builtin_opts)
+end, { desc = '[S]earch [S]elect Telescope' })
+
 vim.keymap.set('n', '<Leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
 vim.keymap.set('n', '<Leader>sc', builtin.commands, { desc = '[S]earch [C]ommands' })
 
@@ -177,25 +185,8 @@ vim.keymap.set('n', '<Leader>/', function()
     builtin.current_buffer_fuzzy_find(search_picker_opts)
 end, { desc = '[/] Fuzzily search in current buffer' })
 
--- Diagnostics
-local bottom_pane_theme = themes.get_ivy({
-    path_display = { 'tail' },
-    layout_config = {
-        height = 0.50,
-    },
-})
-
-vim.keymap.set('n', '<Leader>sd', function()
-    builtin.diagnostics(bottom_pane_theme)
-end, { desc = '[S]earch [D]iagnostics' })
-
-vim.keymap.set('n', '<Leader>sr', function()
-    builtin.resume(bottom_pane_theme)
-end, { desc = '[S]earch [R]esume' })
-
 -- LSP
 local cursor_theme = themes.get_cursor({
-    path_display = { 'tail' },
     layout_config = {
         width = 0.70,
         height = 0.50,
