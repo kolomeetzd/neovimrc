@@ -34,16 +34,14 @@ nvim_lint.linters_by_ft = {
 
 -- Allow multiple parallel golangci-lint instances running,
 -- with $(nproc) number of CPUs.
-local golangcilint = require('lint.linters.golangcilint')
-golangcilint.args = {
+local go_lint = require('lint').linters.golangcilint
+go_lint.args = {
     'run',
-    '-j',
-    '$(nproc)',
     '--allow-parallel-runners',
-    '--output.json.path',
-    'stdout',
+    '--output.json.path=stdout',
+    '--show-stats=false',
+    '--output.text.print-issued-lines=false',
     '--fix',
-    '--issues-exit-code=1',
 }
 
 ----[ Setup
