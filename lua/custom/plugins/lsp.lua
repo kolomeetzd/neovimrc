@@ -15,6 +15,14 @@ vim.pack.add(source_list)
 
 ----[ Related autocommands
 
+-- Set up buffer-local keymaps when an LSP client attached.
+vim.api.nvim_create_autocmd('LspAttach', {
+    group = vim.api.nvim_create_augroup('user-lsp-keymaps', { clear = true }),
+    callback = function ()
+        vim.keymap.set('n', '<Leader>lr', ':lsp restart<CR>')
+    end
+})
+
 --  This function gets run when an LSP attaches to a particular buffer.
 vim.api.nvim_create_autocmd('LspAttach', {
     group = vim.api.nvim_create_augroup('user-lsp-attach', { clear = true }),
