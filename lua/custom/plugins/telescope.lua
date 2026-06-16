@@ -91,16 +91,13 @@ local telescope_opts = {
 
 -- Built-ins
 
-local builtin_opts = {
-    previewer = false,
+local builtin_opts = themes.get_ivy({
     prompt_title = false,
     results_title = false,
-    sorting_strategy = 'descending',
-    layout_strategy = 'center',
     layout_config = {
-        prompt_position = 'bottom',
+        preview_width = 0.66,
     },
-}
+})
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<Leader>sh', function()
@@ -109,9 +106,12 @@ end, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<Leader>ss', function()
     builtin.builtin(builtin_opts)
 end, { desc = '[S]earch [S]elect Telescope' })
-
-vim.keymap.set('n', '<Leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-vim.keymap.set('n', '<Leader>sc', builtin.commands, { desc = '[S]earch [C]ommands' })
+vim.keymap.set('n', '<Leader>sk', function()
+    builtin.keymaps(builtin_opts)
+end, { desc = '[S]earch [K]eymaps' })
+vim.keymap.set('n', '<Leader>sc', function()
+    builtin.commands(builtin_opts)
+end, { desc = '[S]earch [C]ommands' })
 
 -- File pickers
 local file_picker_opts = {
