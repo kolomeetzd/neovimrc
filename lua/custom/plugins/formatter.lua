@@ -17,6 +17,7 @@ local conform_opts = {
         -- You can specify filetypes to autoformat on save here:
         local enabled_filetypes = {
             -- lua = true,
+            go = true,
         }
         if (vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat)
             or not enabled_filetypes[vim.bo[bufnr].filetype] then

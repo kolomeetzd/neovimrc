@@ -121,13 +121,14 @@ local servers = {
                 },
                 staticcheck = true,
                 buildFlags = { '-tags=integration,mock,e2e' },
-                gofumpt = true,
+                gofumpt = false, -- formatting is handled by the conform.nvim plugin
                 diagnosticsDelay = '250ms',
             },
         },
     },
     -- Helps with golangci-lint config files.
-    ['golangci_lint_ls'] = {},
+    -- FIX: Sometimes raises an error when working with .go files — figure out why.
+    -- ['golangci_lint_ls'] = {},
     clangd = {}, -- Use defaults from nvim-lspconfig
 }
 

@@ -13,7 +13,7 @@ local nvim_lint = require('lint')
 ----[ Related autocommands
 
 -- autocmd to trigger linting
-vim.api.nvim_create_autocmd({ 'BufWritePost' }, {
+vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
     callback = function()
         -- try_lint without arguments runs the linters defined in `linters_by_ft`
         -- for the current filetype
@@ -32,8 +32,8 @@ nvim_lint.linters_by_ft = {
     -- yaml = { 'yamllint' },
 }
 
--- Allow multiple parallel golangci-lint instances running,
--- with $(nproc) number of CPUs.
+-- Allow multiple parallel golangci-lint instances running.
+--[[ FIX: Linter fails during save with these arguments — investigate.
 local go_lint = require('lint').linters.golangcilint
 go_lint.args = {
     'run',
@@ -43,6 +43,7 @@ go_lint.args = {
     '--output.text.print-issued-lines=false',
     '--fix',
 }
+--]]
 
 ----[ Setup
 -- NOTE: nvim-lint doesn't require setup call
