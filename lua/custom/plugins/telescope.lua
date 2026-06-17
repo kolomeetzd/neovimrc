@@ -41,6 +41,7 @@ local telescope_opts = {
             '--smart-case',
         },
         file_ignore_patterns = { '^.git/', '^vendor/' },
+        results_title = false,
         prompt_prefix = '   ',
         selection_caret = '  ',
         sorting_strategy = 'ascending',
@@ -61,14 +62,9 @@ local telescope_opts = {
         },
         winblend = 0,
         borderchars = {
-            '─',
-            '│',
-            '─',
-            '│',
-            '┌',
-            '┐',
-            '┘',
-            '└',
+            preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└', },
+            prompt = { '─', '│', '─', '│', '┌', '┐', '┘', '└', },
+            results = { '─', '│', '─', '│', '┌', '┐', '┘', '└', },
         },
         color_devicons = true,
         set_env = {
@@ -91,9 +87,11 @@ local telescope_opts = {
 
 -- Built-ins
 
-local builtin_opts = themes.get_ivy({
-    prompt_title = false,
-    results_title = false,
+local ivy_theme = themes.get_ivy({
+    borderchars = {
+        preview = { '─', '│', '─', '│', '┌', '┐', '┘', '└', },
+    },
+    preview_title = false,
     layout_config = {
         preview_width = 0.66,
     },
@@ -101,16 +99,16 @@ local builtin_opts = themes.get_ivy({
 
 -- See `:help telescope.builtin`
 vim.keymap.set('n', '<Leader>sh', function()
-    builtin.help_tags(builtin_opts)
+    builtin.help_tags(ivy_theme)
 end, { desc = '[S]earch [H]elp' })
 vim.keymap.set('n', '<Leader>ss', function()
-    builtin.builtin(builtin_opts)
+    builtin.builtin(ivy_theme)
 end, { desc = '[S]earch [S]elect Telescope' })
 vim.keymap.set('n', '<Leader>sk', function()
-    builtin.keymaps(builtin_opts)
+    builtin.keymaps(ivy_theme)
 end, { desc = '[S]earch [K]eymaps' })
 vim.keymap.set('n', '<Leader>sc', function()
-    builtin.commands(builtin_opts)
+    builtin.commands(ivy_theme)
 end, { desc = '[S]earch [C]ommands' })
 
 -- File pickers
@@ -118,7 +116,6 @@ local file_picker_opts = {
     follow = true,
     hidden = true,
     no_ignore = true,
-    resutls_title = false,
     previewer = false,
     layout_strategy = 'vertical',
     layout_config = {
@@ -145,44 +142,43 @@ end, { desc = 'Search in open buffers' })
 -- Git
 -- List unstaged git files only
 vim.keymap.set( 'n', '<Leader>gs', function()
-    builtin.git_status()
+    builtin.git_status(ivy_theme)
 end, { desc = ':Telescope git_status' })
 -- List git commits with diff preview
 vim.keymap.set( 'n', '<Leader>gc', function()
-    builtin.git_commits()
+    builtin.git_commits(ivy_theme)
 end, { desc = ':Telescope git_commits' })
 
 -- Search for an entry that matches patterns
-local search_picker_opts = themes.get_dropdown({
-    previewer = false,
-})
 
 -- A `word` consists of a sequence of letters, digits and underscores,
 -- separated with white space.
 vim.keymap.set({'n', 'v' }, '<Leader>ws', function()
     local args = { search = vim.fn.expand('<cword>') }
-    builtin.grep_string(args)
+    builtin.grep_string(vim.tbl_extend('force', ivy_theme, args))
 end, { desc = 'Search a word under cursor' })
 -- A `WORD` consists of a sequence of non-blank characters,
 -- separated with white space.
 vim.keymap.set({ 'n', 'v' }, '<Leader>Ws', function()
     local args = { search = vim.fn.expand('<cWORD>') }
-    builtin.grep_string(args)
+    builtin.grep_string(vim.tbl_extend('force', ivy_theme, args))
 end, { desc = 'Search a WORD under cursor' })
 
 -- See `:help telescope.builtin.live_grep()` for information about particular keys
-vim.keymap.set('n', '<Leader>lg', builtin.live_grep, { desc = 'Perform [L]ive [G]rep' })
+vim.keymap.set('n', '<Leader>lg', function()
+    builtin.live_grep(ivy_theme)
+end, { desc = 'Perform [L]ive [G]rep' })
 
 vim.keymap.set( 'n', '<Leader>lG', function()
-    local opts = {
+    local args = {
         grep_open_files = true,
         prompt_title = 'Live Grep in Open Files',
     }
-    builtin.live_grep(opts)
+    builtin.live_grep(vim.tbl_extend('force', ivy_theme, args))
 end, { desc = 'Search in Open Files' })
 
 vim.keymap.set('n', '<Leader>/', function()
-    builtin.current_buffer_fuzzy_find(search_picker_opts)
+    builtin.current_buffer_fuzzy_find({ previewer = false })
 end, { desc = '[/] Fuzzily search in current buffer' })
 
 -- LSP
