@@ -140,10 +140,23 @@ vim.keymap.set('n', '<Leader>pb', function()
 end, { desc = 'Search in open buffers' })
 
 -- Git
--- List unstaged git files only
-vim.keymap.set( 'n', '<Leader>gs', function()
+local git_status = function()
+    vim.fn.system('git rev-parse --is-inside-work-tree')
+    if vim.v.shell_error ~= 0 then
+        vim.notify('git status: not a git repository', vim.log.levels.ERROR)
+        return nil
+    end
+
+    if vim.fn.system('git status -z -- .') == '' then
+        vim.notify('git status: no changes found', vim.log.levels.INFO)
+        return nil
+    end
+
     builtin.git_status(ivy_theme)
-end, { desc = ':Telescope git_status' })
+end
+
+-- List unstaged git files only
+vim.keymap.set( 'n', '<Leader>gs', git_status, { desc = ':Telescope git_status' })
 -- List git commits with diff preview
 vim.keymap.set( 'n', '<Leader>gc', function()
     builtin.git_commits(ivy_theme)
