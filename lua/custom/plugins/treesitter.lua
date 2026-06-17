@@ -44,6 +44,8 @@ local parsers = {
     'yaml',
 }
 
+local excluded_parsers = { go = true }
+
 ---@param buf integer
 ---@param language string
 local function treesitter_try_attach(buf, language)
@@ -59,6 +61,9 @@ local function treesitter_try_attach(buf, language)
     vim.api.nvim_set_option_value('foldmethod', 'expr', local_win)
     vim.api.nvim_set_option_value('foldlevel', 99, local_win) -- Keep folds expanded by default
 
+    -- Do not enable treesitter-based indentation for specified parsers
+    if excluded_parsers[language] then return end
+
     -- Check if treesitter indentation is available for this language, and if so enable it
     -- in case there is no indent query, the indentexpr will fallback to the vim's built in one
     local has_indent_query = vim.treesitter.query.get(language, 'indents') ~= nil
@@ -71,6 +76,7 @@ local function treesitter_try_attach(buf, language)
 end
 
 local available_parsers = require('nvim-treesitter').get_available()
+
 vim.api.nvim_create_autocmd('FileType', {
     callback = function(args)
         local buf, filetype = args.buf, args.match

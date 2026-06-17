@@ -2,6 +2,7 @@ local go_opts = {
     expandtab = false,
     tabstop = 4,
     shiftwidth = 4,
+    softtabstop = -1,
 
     formatoptions = 'rocjq',
 }
