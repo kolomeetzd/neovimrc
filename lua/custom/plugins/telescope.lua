@@ -140,14 +140,15 @@ vim.keymap.set('n', '<Leader>pb', function()
 end, { desc = 'Search in open buffers' })
 
 -- Git
+local utils = require('custom.utils')
+
 local git_status = function()
-    vim.fn.system('git rev-parse --is-inside-work-tree')
-    if vim.v.shell_error ~= 0 then
+    if not utils.is_git_repo() then
         vim.notify('git status: not a git repository', vim.log.levels.ERROR)
         return nil
     end
 
-    if vim.fn.system('git status -z -- .') == '' then
+    if not utils.has_unstaged_changes() then
         vim.notify('git status: no changes found', vim.log.levels.INFO)
         return nil
     end
